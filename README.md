@@ -13,7 +13,7 @@ Yes, this is simple. This game was made to highlight simplicity in my portfolio.
 
 - Rules and high score Alert boxes can be closed by user, because user likes to know if they read it
 
-- Implemented game wrapper with fullScreen mode so users on phone can ignore that fluff
+- Implemented game wrapper with fullScreen mode so users on phone can ignore the fluff
 
 - No local storage or cookies. All state based using React 18.x
 
