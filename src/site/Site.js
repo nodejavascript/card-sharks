@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { DownOutlined, UpOutlined, RedoOutlined } from '@ant-design/icons'
 import { Space, Button, Statistic, Image, Card, message } from 'antd'
 
 import { returnShuffledCards } from './data'
 
-const ScoresView = ({ cardIndex, correctGuesses, correctGuessesInARow, bestCorrectGuessesInARow, bestScore }) => {
+const ScoresView = ({ game }) => {
+  if (!game) return null
+  const { cardIndex, correctGuesses, correctGuessesInARow, bestCorrectGuessesInARow, bestScore } = game
   return (
     <Space align='center' size='large'>
       <Statistic title='Card' value={cardIndex + 1} />
@@ -17,8 +19,8 @@ const ScoresView = ({ cardIndex, correctGuesses, correctGuessesInARow, bestCorre
   )
 }
 
-const ButtonView = ({ gameOver, onGuess }) => {
-  if (gameOver) return null
+const ButtonView = ({ game, onGuess }) => {
+  if (!game) return null
 
   return (
     <Space align='center' size='large'>
@@ -41,83 +43,102 @@ const GameOverView = ({ gameOver, onStartOver }) => {
   )
 }
 
-const CardView = ({ gameOver, card }) => {
+const CardView = ({ game, cards }) => {
+  if (!game) return null
+  if (game.gameOver) return null
+
+  const src = cards[game.cardIndex].src
   return (
     <Card>
       <Image
         preview={false}
-        src={card.src}
+        src={src}
       />
     </Card>
   )
 }
 
+const returnNewGame = () => {
+  const cardIndex = 0
+  const gameOver = false
+  const correctGuesses = 0
+  const correctGuessesInARow = 0
+  const bestCorrectGuessesInARow = 0
+
+  return { cardIndex, gameOver, correctGuesses, correctGuessesInARow, bestCorrectGuessesInARow }
+}
+
 const Site = () => {
   const [cards, setCards] = useState(returnShuffledCards())
-  const [cardIndex, setCardIndex] = useState(0)
-  const [correctGuesses, setCorrectGuesses] = useState(0)
-  const [correctGuessesInARow, setCorrectGuessesInARow] = useState(0)
-  const [bestCorrectGuessesInARow, setBestCorrectGuessesInARow] = useState(0)
-  const [bestScore, setBestScore] = useState(0)
+  const [game, setGame] = useState()
 
-  // console.log('cards', cards)
+  useEffect(() => {
+    if (!game) setGame({ bestScore: 0, ...returnNewGame() })
+
+    if (game?.message) message.open(game.message)
+  }, [game, setGame])
 
   const onGuess = guess => {
     const currentValue = card.value
+    const nextValue = cards[game.cardIndex + 1].value
 
-    const nextCard = cards[cardIndex + 1]
-
-    const nextValue = nextCard.value
-
-    let correct = false
-
-    if (guess === 'higher' && nextValue > currentValue) correct = true
-    if (guess === 'lower' && nextValue < currentValue) correct = true
-
-    if (correct) {
-      setCorrectGuesses(correctGuesses + 1)
-      const correctInARow = correctGuessesInARow + 1
-      setCorrectGuessesInARow(correctInARow)
-      if (correctInARow > bestCorrectGuessesInARow) setBestCorrectGuessesInARow(correctInARow)
-      if (correctInARow > bestScore) setBestScore(correctInARow)
-    }
-
-    if (!correct) setCorrectGuessesInARow(0)
-
-    setCardIndex(cardIndex + 1)
-
-    const messageOptions = {
+    const message = {
       duration: 1,
-      // style: { marginTop: '25vh' },
-      type: correct ? 'success' : 'error',
-      content: correct ? 'Right' : 'Wrong'
+      type: 'info',
+      content: 'Tied'
     }
 
-    message.open(messageOptions)
+    if (guess === 'higher' && nextValue > currentValue) {
+      message.type = 'success'
+      message.content = 'Right'
+    }
+
+    if (guess === 'lower' && nextValue < currentValue) {
+      message.type = 'error'
+      message.content = 'Wrong'
+    }
+
+    const correct = Boolean(message.type === 'Right')
+    const correctGuesses = correct ? game.correctGuesses + 1 : game.correctGuesses
+    const correctGuessesInARow = correct ? game.correctGuessesInARow + 1 : 0
+    const bestCorrectGuessesInARow = correctGuessesInARow > game.bestCorrectGuessesInARow && correctGuessesInARow
+    const bestCorrectGuessesInARowSession = bestCorrectGuessesInARow > game.bestCorrectGuessesInARowSession && bestCorrectGuessesInARow
+
+    setGame({
+      ...game,
+      correctGuesses,
+      correctGuessesInARow,
+      bestCorrectGuessesInARow,
+      bestCorrectGuessesInARowSession,
+      correct,
+      message
+    })
   }
 
-  const onStartOver = () => {
-    setCards(returnShuffledCards())
-    setCardIndex(0)
-    setCorrectGuesses(0)
-    setCorrectGuessesInARow(0)
-    setBestCorrectGuessesInARow(0)
-  }
-
-  const gameOver = Boolean(cardIndex + 1 >= cards.length)
-
-  const card = !gameOver && cards[cardIndex]
+  const card = game?.cardIndex < 52 && cards[game.cardIndex]
 
   return (
-    <Space direction='vertical' size='large' style={{ display: 'flex' }} align='center'>
-      <ScoresView cardIndex={cardIndex} correctGuesses={correctGuesses} correctGuessesInARow={correctGuessesInARow} bestCorrectGuessesInARow={bestCorrectGuessesInARow} bestScore={bestScore} />
-      <ButtonView gameOver={gameOver} onGuess={onGuess} />
-      <CardView gameOver={gameOver} card={card} />
-      <GameOverView gameOver={gameOver} onStartOver={onStartOver} />
-
-      <StartOver onStartOver={onStartOver} />
+    <Space
+      direction='vertical'
+      size='large'
+      style={{ display: 'flex' }}
+      align='center'
+    >
+      <ScoresView game={game} />
+      <ButtonView game={game} onGuess={onGuess} />
+      <CardView game={game} cards={cards} />
     </Space>
   )
+  // return (
+  //   <Space direction='vertical' size='large' style={{ display: 'flex' }} align='center'>
+  //     <ScoresView cardIndex={cardIndex} correctGuesses={correctGuesses} correctGuessesInARow={correctGuessesInARow} bestCorrectGuessesInARow={bestCorrectGuessesInARow} bestScore={bestScore} />
+  //     <ButtonView gameOver={gameOver} onGuess={onGuess} />
+  //     <CardView gameOver={gameOver} card={card} />
+  //     <GameOverView gameOver={gameOver} onStartOver={onStartOver} />
+  //
+  //     <StartOver onStartOver={onStartOver} />
+  //   </Space>
+  // )
 }
 
 export default Site

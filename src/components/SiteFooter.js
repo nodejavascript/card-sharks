@@ -26,7 +26,8 @@ const notes = [
   }
 ]
 
-const SiteFooter = () => {
+const SiteFooter = ({ fullScreen }) => {
+  if (fullScreen) return null
   return (
     <Space wrap>
       {

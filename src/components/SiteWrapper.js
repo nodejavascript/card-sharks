@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Background from './Background'
 
 import SiteHeader from './SiteHeader'
@@ -7,15 +7,17 @@ import SiteFooter from './SiteFooter'
 import { Space } from 'antd'
 
 const SiteWrapper = ({ children }) => {
+  const [fullScreen, setFullScreen] = useState()
+
   return (
     <Background>
       <Space direction='vertical' size='large'>
 
-        <SiteHeader />
+        <SiteHeader fullScreen={fullScreen} setFullScreen={setFullScreen} />
 
         {children}
 
-        <SiteFooter />
+        <SiteFooter fullScreen={fullScreen} />
 
       </Space>
     </Background>
