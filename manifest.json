@@ -1,0 +1,25 @@
+{
+  "short_name": "card-sharks",
+  "name": "card-sharks : A single player card game where you guess if the next card is higher or lower.",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/nodejavascript-com/image/upload/v1676852135/card-sharks/card-game_ygwepd.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "https://res.cloudinary.com/nodejavascript-com/image/upload/v1676852135/card-sharks/card-game_ygwepd.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://res.cloudinary.com/nodejavascript-com/image/upload/v1676852135/card-sharks/card-game_ygwepd.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000"
+}

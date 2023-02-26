@@ -1,0 +1,48 @@
+{
+  "name": "card-sharks",
+  "version": "0.2.0",
+  "description": "Paste text to generate your free card-sharks",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nodejavascript/card-sharks.git"
+  },
+  "author": "nodejsjavascript@gmail.com",
+  "license": "SEE LICENSE",
+  "private": true,
+  "dependencies": {
+    "antd": "^5.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-ga4": "^2.0.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "test": "standard  --verbose"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "standard": "^17.0.0"
+  }
+}
