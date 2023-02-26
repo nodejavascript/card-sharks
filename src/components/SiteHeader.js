@@ -57,6 +57,11 @@ const SiteHeader = ({ fullScreen, setFullScreen }) => {
           message='Rules'
           description={description}
         />
+        <Alert
+          type='warning'
+          closable
+          message={<i>Your high score is saved unless you refresh the page.</i>}
+        />
       </Space>
     </Card>
   )
