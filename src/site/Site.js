@@ -7,20 +7,20 @@ import { Space, Button, Statistic, Image, Card, message, Typography, Row, Col, R
 const { Text } = Typography
 
 const returnNewGame = (game = {}) => {
-  const cardIndex = 50
+  const cardIndex = 0
   const correctGuesses = 0
-  const correctGuessesInARow = 0
+  const score = 0
   const highScore = game.highScore || 0
   const cards = returnShuffledCards()
 
-  return { cardIndex, correctGuesses, correctGuessesInARow, highScore, cards }
+  return { cardIndex, correctGuesses, score, highScore, cards }
 }
 
 const isPlaying = game => Boolean(game && game.cardIndex < game.cards.length - 1)
 
 const ScoresView = ({ game }) => {
   if (!game) return null
-  const { correctGuessesInARow, highScore } = game
+  const { score, highScore } = game
 
   return (
     <Card>
@@ -28,7 +28,7 @@ const ScoresView = ({ game }) => {
         justify='space between'
       >
         <Col flex='auto'>
-          <Statistic title='Score' value={correctGuessesInARow} />
+          <Statistic title='Score' value={score} />
         </Col>
         <Col flex='auto' align='right'>
           <Statistic title='High Score' value={highScore} />
@@ -155,14 +155,14 @@ const Site = () => {
     }
 
     const correctGuesses = correct ? game.correctGuesses + 1 : game.correctGuesses
-    const correctGuessesInARow = correct ? game.correctGuessesInARow + 1 : 0
-    const highScore = correctGuessesInARow > game.highScore ? correctGuessesInARow : game.highScore
+    const score = correct ? game.score + 1 : 0
+    const highScore = score > game.highScore ? score : game.highScore
 
     const update = {
       cardIndex: nextCardIndex,
       cards,
       correctGuesses,
-      correctGuessesInARow,
+      score,
       highScore,
       response
     }
